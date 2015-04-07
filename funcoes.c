@@ -176,31 +176,31 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 	
 	p.dir = 0;
 
-	if(strcmp(opcode, "LD") == 0){
+	if(strcmp(opcode, "LOAD") == 0){
 		return 1;
 	}
-	else if(strcmp(opcode, "LD_MQ") == 0){
+	else if(strcmp(opcode, "LDMQ") == 0){
 		return 10;
 	}
-	else if(strcmp(opcode, "LD_MQMX") == 0){
+	else if(strcmp(opcode, "LDMQM") == 0){
 		return 9;
 	}
-	else if(strcmp(opcode, "LD_N") == 0){
+	else if(strcmp(opcode, "LDN") == 0){
 		return 2;
 	}
-	else if(strcmp(opcode, "LD_ABS") == 0){
+	else if(strcmp(opcode, "LDABS") == 0){
 		return 3;
 	}
 	else if(strcmp(opcode, "ADD") == 0){
 		return 5;
 	}
-	else if(strcmp(opcode, "ADD_ABS") == 0){
+	else if(strcmp(opcode, "ADDABS") == 0){
 		return 7;
 	}
 	else if(strcmp(opcode, "SUB") == 0){
 		return 6;
 	}
-	else if(strcmp(opcode, "SUB_ABS") == 0){
+	else if(strcmp(opcode, "SUBABS") == 0){
 		return 8;
 	}
 	else if(strcmp(opcode, "MUL") == 0){
@@ -215,7 +215,7 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 	else if(strcmp(opcode, "RSH") == 0){
 		return 21;
 	}
-	else if(strcmp(opcode, "ST") == 0){
+	else if(strcmp(opcode, "STR") == 0){
 		return 33;
 	}
 	//instrucoes que dependem de pra onde o rotulo aponta
@@ -231,7 +231,7 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 			
 			p = procuraCelula(rotulos, n);
 			
-			if(strcmp(opcode, "ST_ADDR") == 0){
+			if(strcmp(opcode, "STM") == 0){
 				if(p.dir)
 					return 19;
 				else
@@ -245,7 +245,7 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 				  return 13;
 			}
 			
-			else if(strcmp(opcode,"JGE") == 0){
+			else if(strcmp(opcode,"JGEZ") == 0){
 				if(p.dir)
 					return 16;
 				else
@@ -260,31 +260,31 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 // checa se a instrucao e valida
 int checaInstrucao(char *opcode){
 
-	if(strcmp(opcode, "LD") == 0)
+	if(strcmp(opcode, "LOAD") == 0)
 		return 1;
 		
-	else if(strcmp(opcode, "LD_MQ") == 0)
+	else if(strcmp(opcode, "LDMQ") == 0)
 		return 2;
 		
-	else if(strcmp(opcode, "LD_MQMX") == 0)
+	else if(strcmp(opcode, "LDMQM") == 0)
 		return 1;
 		
-	else if(strcmp(opcode, "LD_N") == 0)
+	else if(strcmp(opcode, "LDN") == 0)
 		return 1;
 		
-	else if(strcmp(opcode, "LD_ABS") == 0)
+	else if(strcmp(opcode, "LDABS") == 0)
 		return 1;
 		
 	else if(strcmp(opcode, "ADD") == 0)
 		return 1;
 		
-	else if(strcmp(opcode, "ADD_ABS") == 0)
+	else if(strcmp(opcode, "ADDABS") == 0)
 		return 1;
 		
 	else if(strcmp(opcode, "SUB") == 0)
 		return 1;
 		
-	else if(strcmp(opcode, "SUB_ABS") == 0)
+	else if(strcmp(opcode, "SUBABS") == 0)
 		return 1;
 		
 	else if(strcmp(opcode, "MUL") == 0)
@@ -299,16 +299,16 @@ int checaInstrucao(char *opcode){
 	else if(strcmp(opcode, "RSH") == 0)
 		return 2;
 		
-	else if(strcmp(opcode, "ST") == 0)
+	else if(strcmp(opcode, "STR") == 0)
 		return 1;
 		
-	else if(strcmp(opcode, "ST_ADDR") == 0)
+	else if(strcmp(opcode, "STM") == 0)
 		return 1;
 			
 	else if(strcmp(opcode, "JMP") == 0)
 		return 1;
 			
-	else if(strcmp(opcode,"JGE") == 0)
+	else if(strcmp(opcode,"JGEZ") == 0)
 		return 1;
 	
 	return 0;
