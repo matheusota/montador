@@ -443,6 +443,9 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 				if(text[j][i+1]){
 					k = atual.endereco;
 					
+					if(atual.dir == 1)
+						k++;
+					
 					while(!(k % v1.endereco == 0))
 						k++;
 					
