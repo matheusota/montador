@@ -68,7 +68,7 @@ var_y: .word 0000000002
 JMP M(0x000)
 
 .align 1
-xablau: .word UM
-vetor1: .wfill var_x, ZERO
+xablau: .word var_x
+vetor1: .wfill xablau, xablau
 
 vetor2: .wfill TAMANHO, UM
