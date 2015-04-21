@@ -64,11 +64,9 @@ var_y: .word 0000000002
 .set UM, 0000000001
 
 .org 0x000
-
 JMP M(0x000)
-
 .align 1
 xablau: .word var_x
-vetor1: .wfill xablau, xablau
+vetor1: .wfill xablau, var_y
 
 vetor2: .wfill TAMANHO, UM

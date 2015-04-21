@@ -430,8 +430,6 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 					atual.endereco = v1.endereco;
 					atual.dir = -1;
 					
-					flag = 0;
-					
 					i++;
 				}
 				else
@@ -452,8 +450,6 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 					atual.endereco = k;
 					atual.dir = -1;
 					
-					flag = 0;
-					
 					i++;
 				}
 				else
@@ -464,12 +460,13 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 			else if(strcmp(tipo, "word") == 0){
 				if(atual.dir == -1){
 					if(text[j][i+1]){
-						sprintf(temp, "%d", v1.endereco);
-						strcpy(text[j][i+1], temp);
+						//se for constante simbolica, substitui
+						if(v1.dir != 0){
+							sprintf(temp, "%d", v1.endereco);
+							strcpy(text[j][i+1], temp);
+						}
 						atual.endereco++;
 						atual.dir = -1;
-						
-						flag = 0;
 						
 						i++;
 					}
@@ -485,22 +482,25 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 			else if(strcmp(tipo, "wfill") == 0){
 				if(atual.dir == -1){
 					if(text[j][i+1] && text[i][i+2]){
+						//tira a virgula do argumento1
 						k = strlen(text[j][i+1]);
 						strcpy(temp, text[j][i+1]);
 						temp[k-1] = '\0';
 						
+						//verifica se é uma constante simbólica, se for substitui pelo seu valor
 						v1 = procuraCelula(sets, temp);
-						if(v1.dir == 0)
-							v1.endereco = converteEndereco(temp);
+						if(v1.dir != 0){
+							sprintf(temp, "%d,", v1.endereco);
+							strcpy(text[j][i+1], temp);
+						}
 						
-						sprintf(temp, "%d,", v1.endereco);
-						strcpy(text[j][i+1], temp);
-						
-						sprintf(temp, "%d", v2.endereco);
-						strcpy(text[j][i+2], temp);
+						//se for constante simbólica, subtitui pelo seu valor
+						if(v2.dir != 0){
+							sprintf(temp, "%d", v2.endereco);
+							strcpy(text[j][i+2], temp);
+						}
 						
 						atual.endereco = atual.endereco + v1.endereco;
-						flag = 0;
 						
 						i = i + 2;
 					}
@@ -516,20 +516,16 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 			else if(strcmp(tipo, "instrucao") == 0){
 				if(atual.dir == 1)
 					atual.endereco++;
-				if(flag)
-					atual.dir = atual.dir * (-1);
 				
+				atual.dir = atual.dir * (-1);
 				i++;
-				flag = 1;
 			}
 			
 			else if(strcmp(tipo, "instrucao_sem_arg") == 0){
 				if(atual.dir == 1)
 					atual.endereco++;
-				if(flag)
-					atual.dir = atual.dir * (-1);
 				
-				flag = 1;
+				atual.dir = atual.dir * (-1);
 			}
 			
 			
@@ -576,6 +572,7 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, 
 		for(i = 0; text[j][i]; i++){
 			tipo = typeString(text[j][i]);
 			
+			//pula os rotulos
 			if(tipo != "rotulo"){
 				if(text[j][i+1]){
 					v1 = procuraCelula(rotulos, text[j][i+1]);
@@ -705,6 +702,8 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, 
 						}
 						else
 							k = v2.endereco;
+						
+						printf("%d\n", k);
 						
 						//armazena em temp o numero k em hexa
 						sprintf(temp, "%X", k);
