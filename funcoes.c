@@ -31,6 +31,11 @@ void imprimeCelula(celula *p)
 	}
 }
 
+void imprimeErro(char *erro, char *dir, int linha){
+	printf(erro, dir);
+	printf(LINHA_ERRO, linha+1);
+}
+
 //procura valor nas celulas
 celula procuraCelula(celula *p, char *rotulo)
 {
@@ -69,7 +74,7 @@ int validaNumero(char *n){
 		for(i = 2; i < k; i++)
 			if(((n[i] < 48) || (n[i]>57)) && ((n[i] < 65) || (n[i] > 70)))
 				return 0;
-	return 2;
+		return 2;
 	}
 
 	// binario
@@ -118,7 +123,7 @@ int converteEndereco(char *endereco){
 			for (i = k-1; i > 1; i--){
 				if(endereco[i] == '1')
 					valor = valor + base;
-					base = base * 2;
+				base = base * 2;
 			}
 		}
 		
@@ -160,10 +165,8 @@ int getEndereco(char *string, celula *rotulos, int j){
 		return resultado.endereco;
 	}
 	
-	else{
-		printf(ERRO_ARG_MEMORIA, string);
-		printf(LINHA_ERRO, j);
-	}
+	else
+		imprimeErro(ERRO_ARG_MEMORIA, string, j);
 	
 	return 0;
 }
@@ -232,21 +235,21 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 			p = procuraCelula(rotulos, n);
 			
 			if(strcmp(opcode, "STM") == 0){
-				if(p.dir)
+				if(p.dir == 1)
 					return 19;
 				else
 					return 18;
 			}
 			
 			else if(strcmp(opcode, "JMP") == 0){
-				if(p.dir)
+				if(p.dir == 1)
 				  return 14;
 				else
 				  return 13;
 			}
 			
 			else if(strcmp(opcode,"JGEZ") == 0){
-				if(p.dir)
+				if(p.dir == 1)
 					return 16;
 				else
 					return 15;
@@ -409,15 +412,16 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 			//trata diretiva set
 			if(strcmp(tipo, "set") == 0){
 				if(text[j][i+1] && text[j][i+2]){
+					k = strlen(text[j][i+1]);
 					strcpy(temp, text[j][i+1]);
+					temp[k-1] = '\0';
+					
 					insereCelula(temp, v2.endereco, -1, sets);
 					
 					i = i + 2;
 				}
-				else {
-					printf(ERRO_DIR_ARG, ".set");
-					printf(LINHA_ERRO, j);
-				}
+				else
+					imprimeErro(ERRO_DIR_ARG, ".set", j);
 			}
 			
 			//trata diretiva org
@@ -430,17 +434,14 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 					
 					i++;
 				}
-				else {
-					printf(ERRO_DIR_ARG, ".org");
-					printf(LINHA_ERRO, j);
-				}
+				else
+					imprimeErro(ERRO_DIR_ARG, ".org", j);
 			}
 			
 			//trata diretiva align
 			else if(strcmp(tipo, "align") == 0){
 				if(text[j][i+1]){
 					k = atual.endereco;
-					k++;
 					
 					while(!(k % v1.endereco == 0))
 						k++;
@@ -452,16 +453,16 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 					
 					i++;
 				}
-				else {
-					printf(ERRO_DIR_ARG, ".align");
-					printf(LINHA_ERRO, j);
-				}
+				else
+					imprimeErro(ERRO_DIR_ARG, ".align", j);
 			}
 			
 			//trata diretiva word
 			else if(strcmp(tipo, "word") == 0){
 				if(atual.dir == -1){
 					if(text[j][i+1]){
+						sprintf(temp, "%d", v1.endereco);
+						strcpy(text[j][i+1], temp);
 						atual.endereco++;
 						atual.dir = -1;
 						
@@ -469,16 +470,12 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 						
 						i++;
 					}
-					else {
-						printf(ERRO_DIR_ARG, ".word");
-						printf(LINHA_ERRO, j);
-					}
+					else
+						imprimeErro(ERRO_DIR_ARG, ".word", j);
 				}
 				
-				else {
-					printf(ERRO_ALINHAMENTO, ".word");
-					printf(LINHA_ERRO, j);
-				}
+				else
+					imprimeErro(ERRO_ALINHAMENTO, ".word", j);
 			}
 			
 			//trata diretiva wfill
@@ -493,21 +490,20 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 						if(v1.dir == 0)
 							v1.endereco = converteEndereco(temp);
 							
+						sprintf(temp, "%d", v2.endereco);
+						strcpy(text[j][i+2], temp);
+							
 						atual.endereco = atual.endereco + v1.endereco;
 						flag = 0;
 						
 						i = i + 2;
 					}
-					else {
-						printf(ERRO_ALINHAMENTO, ".wfill");
-						printf(LINHA_ERRO, j);
-					}
+					else
+						imprimeErro(ERRO_DIR_ARG, ".wfill", j);
 				}
 				
-				else{
-					printf(ERRO_ALINHAMENTO, ".wfill");
-					printf(LINHA_ERRO, j);
-				}
+				else
+					imprimeErro(ERRO_ALINHAMENTO, ".wfill", j);
 			}
 			
 			//trata instrucao
@@ -539,17 +535,15 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 				insereCelula(temp, atual.endereco, atual.dir, rotulos);
 			}
 			
-			else{
-				printf(ERRO_COMANDO, text[j][i]);
-				printf(LINHA_ERRO, j);
-			}
+			else
+				imprimeErro(ERRO_COMANDO, text[j][i], j);
 			
 		}
 	}
 }
 
 //encontra os pares rotulos-enderecos
-void secondFileRun(char ***text, celula *rotulos, celula *sets){
+void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, char* output){
 	int j, i, k, y, n;
 	char temp[500];
 	char *tipo, aux[10];
@@ -559,7 +553,10 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets){
 	atual.endereco = 0;
 	atual.dir = -1;
 	
-	file = fopen("ra138889.hex", "w");
+	if(!output)
+		output = strcat(filename,".hex");
+		
+	file = fopen(output, "w");
 	
 	//monta a lista de rotulos - enderecos
 	for(j = 0; j < n_lines; j++){
@@ -567,14 +564,14 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets){
 			tipo = typeString(text[j][i]);
 			
 			if(text[j][i+1]){
-				v1 = procuraCelula(sets, text[j][i+1]);
+				v1 = procuraCelula(rotulos, text[j][i+1]);
 
 				if(v1.dir == 0)
 					v1.endereco = converteEndereco(text[j][i+1]);
 			}
 			
 			if(text[j][i+2]){
-				v2 = procuraCelula(sets, text[j][i+2]);
+				v2 = procuraCelula(rotulos, text[j][i+2]);
 			
 				if(v2.dir == 0)
 					v2.endereco = converteEndereco(text[j][i+2]);
@@ -601,9 +598,14 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets){
 			
 			//trata diretiva align
 			else if(strcmp(tipo, "align") == 0){
-				if(text[j][i+1])
+				if(text[j][i+1]){
+					if(atual.dir == 1){
+						fprintf(file, "00 000\n");
+						atual.endereco++;
+						atual.dir = -1;
+					}
+					
 					k = atual.endereco;
-					k++;
 					
 					while(!(k % v1.endereco == 0))
 						k++;
@@ -612,25 +614,30 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets){
 					atual.dir = -1;
 					
 					i++;
+				}
+				else
+					printf(ERRO_DIR_ARG, ".align");
 			}
 			
 			//trata diretiva word
 			else if(strcmp(tipo, "word") == 0){
 				if(text[j][i+1]){
-					//caso seja numero negativo
-					if(text[j][i+1][0] == '-'){
-						k = converteEndereco(&text[j][i+1][1]);
-						k = k*(-1);
+					if(v1.dir == 0){
+						//caso seja numero negativo
+						if(text[j][i+1][0] == '-'){
+							k = converteEndereco(&text[j][i+1][1]);
+							k = k*(-1);
+						}
+						//caso contrario
+						else
+							k = converteEndereco(text[j][i+1]);
+					
+						//encontra a representacao complemento do numero
+						if(k < 0)
+							k = 1099511627775 + k;
 					}
-					//caso contrario
 					else
-						k = converteEndereco(text[j][i+1]);
-					
-					n = k;
-					
-					//encontra a representacao complemento do numero
-					if(k < 0)
-						k = 1099511627775 + k;
+						k = v1.endereco;
 					
 					//armazena em temp o numero k em hexa
 					sprintf(temp, "%X", k);
@@ -659,30 +666,34 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets){
 			//trata diretiva wfill
 			else if(strcmp(tipo, "wfill") == 0){
 				if(atual.dir == -1){
-					//armazena em temp o numero sem a virgula
+					//armazena em temp o numero/rotulo do argumento1 sem a virgula
 					k = strlen(text[j][i+1]);
 					strcpy(temp, text[j][i+1]);
 					temp[k-1] = '\0';
 					
-					//procura nos sets ou converte o numero
-					v1 = procuraCelula(sets, temp);
+					//procura nos rotulos ou converte o numero
+					v1 = procuraCelula(rotulos, temp);
 					if(v1.dir == 0)
 						v1.endereco = converteEndereco(temp);
 					
-					//verifica se é negativo e converte o numero
-					if(text[j][i+2][0] == '-'){
-						v2.endereco = converteEndereco(&text[j][i+2][1]);
-						v2.endereco = v2.endereco*(-1);
+					if(v2.dir == 0){
+						//verifica se argumento2 é negativo e converte o numero
+						if(text[j][i+2][0] == '-'){
+							k = converteEndereco(&text[j][i+2][1]);
+							k = k*(-1);
+						}
+						else
+							k = converteEndereco(text[j][i+2]);
+					
+						//converte para representação de complemento
+						if(k < 0)
+							k = 1099511627775 + k;
 					}
 					else
-						v2.endereco = converteEndereco(text[j][i+2]);
+						k = v2.endereco;
 					
-					//converte para representação de complemento
-					if(k < 0)
-						k = 1099511627775 + k;
-					
-					//armazena em temp v2.endereco em hexa
-					sprintf(temp, "%X", v2.endereco);
+					//armazena em temp o numero k em hexa
+					sprintf(temp, "%X", k);
 					
 					y = 0;
 					
@@ -739,11 +750,15 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets){
 		}
 	}
 	
+	//completa ultima palavra
+	if(atual.dir == 1)
+		fprintf(file, "00 000\n");
+	
 	fclose(file);
 }
 
 //le o arquivo
-void read_ASM_file(char *filename)
+void read_ASM_file(char *filename, char *output)
 { 
 	FILE *fp;
 	char file[FILE_SIZE];
@@ -815,9 +830,15 @@ void read_ASM_file(char *filename)
 	
 	firstFileRun(text, &rotulos, &sets);
 	
+	printf("ROTULOS:\n");
+	imprimeCelula(&rotulos);
+	
+	printf("SETS:\n");
+	imprimeCelula(&sets);
+	
 	//realiza segunda leitura e imprime o arquivo montado
 	
-	secondFileRun(text, &rotulos, &sets);
+	secondFileRun(text, &rotulos, &sets, filename, output);
 
 	fclose(fp);
 }

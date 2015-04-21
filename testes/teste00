@@ -1,0 +1,97 @@
+LDMQM M(0x3FE)   
+MUL M(0x3FF)   
+LDMQ
+STR M(0x3FD)   
+RSH
+STR M(0x3FC)   
+
+LDMQM M(0x3FD)    
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)   
+LDMQM M(0x3FD)
+
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)
+
+LDMQM M(0x3FD)    
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)   
+LDMQM M(0x3FD)
+
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)
+
+LDMQM M(0x3FD)    
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)   
+LDMQM M(0x3FD)
+
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)
+
+LDMQM M(0x3FD)    
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)   
+LDMQM M(0x3FD)
+
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)
+
+LDMQM M(0x3FD)    
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)   
+LDMQM M(0x3FD)
+
+LDMQ
+DIV M(0x3FC)    
+LDMQ
+ADD M(0x3FC)   
+RSH
+STR M(0x3FC)
+
+LOAD M(0x3FC) 
+LDMQ
+JMP M(0x400)
+
+
+.org 0x3FC
+.word 0x000
+.word 0x000
+.word 0x00A
+.word 0xDAC

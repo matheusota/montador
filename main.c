@@ -9,7 +9,7 @@ int main(int argc,char **argv)
 	n = atoi(argv[1]);
 		
 	if (n == 0) 
-		read_ASM_file(argv[1]);
+		read_ASM_file(argv[1], argv[2]);
 	else
 		printf(ERRO_ARQUIVO);
 

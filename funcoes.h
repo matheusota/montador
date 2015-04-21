@@ -44,6 +44,6 @@ char* typeString(char *string);
 
 void firstFileRun(char ***text, celula *rotulos, celula *sets);
 
-void secondFileRun(char ***text, celula *rotulos, celula *sets);
+void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, char* output);
 
-void read_ASM_file(char *filename);
+void read_ASM_file(char *filename, char* output);
