@@ -5,7 +5,9 @@
 #define ERRO_COMANDO "ERRO: \"%s\" nao é um comando válido.\n"
 #define ERRO_DIR_ARG "ERRO: diretiva %s não recebeu argumentos suficientes.\n"
 #define ERRO_ARQUIVO "ERRO: arquivo não encontrado.\n"
-#define ERRO_ROTULO_INVALIDO "ERRO: rotulo \"%s\" é inválido\n"
+#define ERRO_ROTULO_INVALIDO "ERRO: rotulo \"%s\" é inválido.\n"
+#define ERRO_SET_EXISTENTE "ERRO: constante simbolica \"%s\" ja existe.\n"
+#define ERRO_ROTULO_EXISTENTE "ERRO: rotulo \"%s\" já existe.\n"
 #define LINHA_ERRO "Linha: %d\n"
 
 //estrutura de dados de lista ligada para os pares rotulo-endereco

@@ -382,7 +382,7 @@ char* typeString(char *string){
 
 //encontra os pares rotulos-enderecos
 void firstFileRun(char ***text, celula *rotulos, celula *sets){
-	int j, i, k, flag = 1; 
+	int j, i, k; 
 	char temp[500];
 	char *tipo;
 	celula atual, v1, v2;
@@ -416,7 +416,12 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 					strcpy(temp, text[j][i+1]);
 					temp[k-1] = '\0';
 					
-					insereCelula(temp, v2.endereco, -1, sets);
+					v1 = procuraCelula(sets, temp);
+					
+					if(v1.dir == 0)
+						insereCelula(temp, v2.endereco, -1, sets);
+					else
+						imprimeErro(ERRO_SET_EXISTENTE, temp, j);
 					
 					i = i + 2;
 				}
@@ -535,8 +540,15 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 				strcpy(temp, text[j][i]);
 				temp[k-1] = '\0';
 				
-				if((temp[0] < 48) || (temp[0] > 57))
-					insereCelula(temp, atual.endereco, atual.dir, rotulos);
+				v1 = procuraCelula(rotulos, temp);
+				if((temp[0] < 48) || (temp[0] > 57)){
+					v1 = procuraCelula(rotulos, temp);
+					
+					if(v1.dir == 0)
+						insereCelula(temp, atual.endereco, atual.dir, rotulos);
+					else
+						imprimeErro(ERRO_ROTULO_EXISTENTE, temp, j);
+				}
 				else
 					imprimeErro(ERRO_ROTULO_INVALIDO, temp, j); 
 			}

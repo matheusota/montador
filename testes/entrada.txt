@@ -16,7 +16,7 @@ var_y:
 
 .org 0x000
 
-laco:
+laco2:
 
 LOAD M(var_x)
 
@@ -25,17 +25,17 @@ SUB  M(var_y)
 JMP M(laco)
 .org 0x100
 
-var_x:
+var_x2:
 
 .word 0000000001
 
 .org 0x200
 
-var_y:
+var_y2:
 
 .org 0x000
 
-laco:
+laco3:
 
 LOAD M(var_x)
 
@@ -44,7 +44,7 @@ SUB  M(var_y)
 JMP M(laco)
 .org 0x000     # Área de código
 
-laco:
+laco4:
 
 LOAD M(var_x)
 
@@ -54,9 +54,9 @@ JMP M(laco)
 
 .org 0x100     # Área de dados
 
-var_x: .word 0000000001
+var_x3: .word 0000000001
 
-var_y: .word 0000000002
+var_y3: .word 0000000002
 .set TAMANHO, 0xC8
 
 .set ZERO, 0000000000
