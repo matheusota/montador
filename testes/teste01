@@ -1,0 +1,50 @@
+.set CONSTANTE, 0x001
+
+.org 0x000
+
+LOAD M(var_x)
+laco:
+STM M(0x001,8:59)
+
+LDMQM M(laco)
+LOAD M(var_y)
+
+STM M(0x002,28:39)
+MUL M(laco)
+
+LDMQ
+ADD M(resultado)
+
+.align 1
+
+STR M(resultado)
+LOAD M(var_x)
+
+ADD M(0X011)
+STR M(var_x)
+
+LOAD M(var_y)
+ADD M(0X011)
+
+STR M(var_y)
+LOAD M(resposta)
+
+SUB M(0x011)
+STR M(resposta)
+
+JGEZ M(laco)
+LOAD M(resultado)
+
+JGEZ M(0x400,0:19)
+
+.org 0x010
+resultado:
+.word 0x000
+
+.word CONSTANTE
+
+
+.org 0x3FD
+var_x: .word 0
+var_y: .word 0
+resposta: .word 0

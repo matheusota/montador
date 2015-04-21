@@ -4,7 +4,7 @@ LOAD  M(0x100)
 
 SUB   M(0x200)
 
-JGEZ M(laco)
+JUMP+ M(laco)
 
 .org 0x100
 
@@ -16,57 +16,59 @@ var_y:
 
 .org 0x000
 
-laco2:
+laco:
 
 LOAD M(var_x)
 
 SUB  M(var_y)
 
-JMP M(laco)
+JUMP M(laco)
 .org 0x100
 
-var_x2:
+var_x:
 
-.word 0000000001
+.word 00 00 00 00 01
 
 .org 0x200
 
-var_y2:
+var_y:
 
 .org 0x000
 
-laco3:
+laco:
 
 LOAD M(var_x)
 
 SUB  M(var_y)
 
-JMP M(laco)
+JUMP M(laco)
 .org 0x000     # Área de código
 
-laco4:
+laco:
 
 LOAD M(var_x)
 
 SUB  M(var_y)
 
-JMP M(laco)
+JUMP M(laco)
 
 .org 0x100     # Área de dados
 
-var_x3: .word 0000000001
+var_x: .word 00 00 00 00 01
 
-var_y3: .word 0000000002
+var_y: .word 00 00 00 00 02
 .set TAMANHO, 0xC8
 
-.set ZERO, 0000000000
+.set ZERO, 00 00 00 00 00
 
-.set UM, 0000000001
+.set UM, 00 00 00 00 01
 
 .org 0x000
-JMP M(0x000)
+
+JUMP M(0x000)
+
 .align 1
-xablau: .word var_x
-vetor1: .wfill xablau, var_y
+
+vetor1: .wfill TAMANHO, ZERO
 
 vetor2: .wfill TAMANHO, UM

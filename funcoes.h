@@ -8,6 +8,7 @@
 #define ERRO_ROTULO_INVALIDO "ERRO: rotulo \"%s\" é inválido.\n"
 #define ERRO_SET_EXISTENTE "ERRO: constante simbolica \"%s\" ja existe.\n"
 #define ERRO_ROTULO_EXISTENTE "ERRO: rotulo \"%s\" já existe.\n"
+#define ERRO_FALTA_BITS "ERRO: instrucao \"%s\" não possui referência aos bits ou possui referência incorreta.\n"
 #define LINHA_ERRO "Linha: %d\n"
 
 //estrutura de dados de lista ligada para os pares rotulo-endereco
@@ -35,7 +36,7 @@ int converteEndereco(char *endereco);
 
 int getEndereco(char *string, celula *rotulos, int j);
 
-int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos);
+int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos, int linha);
 
 int checaInstrucao(char *opcode);
 

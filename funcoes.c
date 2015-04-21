@@ -145,6 +145,7 @@ int converteEndereco(char *endereco){
 int getEndereco(char *string, celula *rotulos, int j){
 	celula resultado;
 	char n[1000];
+	char *aux;
 	int i;
 	int k;
 
@@ -155,12 +156,13 @@ int getEndereco(char *string, celula *rotulos, int j){
 		for(i = 2; i < k - 1; i++)
 			n[i-2] = string[i];
 		n[k - 3] = '\0';
+		aux = strtok(n, ",");
 		
-		resultado = procuraCelula(rotulos, n);
+		resultado = procuraCelula(rotulos, aux);
 		
 		//caso nao seja um rotulo, converte o numero
 		if(resultado.dir == 0)
-			resultado.endereco = converteEndereco(n);
+			resultado.endereco = converteEndereco(aux);
 			
 		return resultado.endereco;
 	}
@@ -172,9 +174,10 @@ int getEndereco(char *string, celula *rotulos, int j){
 }
 
 // checa se a instrucao e valida
-int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
+int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos, int linha){
 	celula p;
 	char n[1000];
+	char *aux;
 	int i, k;
 	
 	p.dir = 0;
@@ -229,30 +232,69 @@ int interpretaInstrucao(char *opcode, char *endereco, celula *rotulos){
 			//copia para n o endereco
 			for(i = 2; i < k - 1; i++)
 				n[i-2] = endereco[i];
-			
+
 			n[k-3] = '\0';
+			aux = strtok(n, ",");
+			k = converteEndereco(aux);
 			
-			p = procuraCelula(rotulos, n);
+			//o argumento é um rotulo
+			if(k == 0){
+				p = procuraCelula(rotulos, n);
 			
-			if(strcmp(opcode, "STM") == 0){
-				if(p.dir == 1)
-					return 19;
-				else
-					return 18;
+				if(strcmp(opcode, "STM") == 0){
+					if(p.dir == 1)
+						return 19;
+					else
+						return 18;
+				}
+				
+				else if(strcmp(opcode, "JMP") == 0){
+					if(p.dir == 1)
+					  return 14;
+					else
+					  return 13;
+				}
+				
+				else if(strcmp(opcode,"JGEZ") == 0){
+					if(p.dir == 1)
+						return 16;
+					else
+						return 15;
+				}
 			}
 			
-			else if(strcmp(opcode, "JMP") == 0){
-				if(p.dir == 1)
-				  return 14;
-				else
-				  return 13;
-			}
-			
-			else if(strcmp(opcode,"JGEZ") == 0){
-				if(p.dir == 1)
-					return 16;
-				else
-					return 15;
+			//o argumento é um numero
+			else{
+				aux = strtok(NULL, ",");
+				
+				if(aux == NULL){
+					imprimeErro(ERRO_FALTA_BITS, opcode, linha);
+					return 0;
+				}
+				
+				if(strcmp(opcode, "STM") == 0){
+					if(strcmp(aux, "28:39") == 0)
+						return 19;
+					else if(strcmp(aux, "8:19") == 0)
+						return 18;
+				}
+				
+				else if(strcmp(opcode, "JMP") == 0){
+					if(strcmp(aux, "20:39") == 0)
+					  return 14;
+					else if(strcmp(aux, "0:19") == 0)
+					  return 13;
+				}
+				
+				else if(strcmp(opcode,"JGEZ") == 0){
+					if(strcmp(aux, "20:39") == 0)
+						return 16;
+					else if(strcmp(aux, "0:19") == 0)
+						return 15;
+				}
+				
+				imprimeErro(ERRO_FALTA_BITS, opcode, linha);
+				return 0;
 			}
 		}
 	}
@@ -498,6 +540,8 @@ void firstFileRun(char ***text, celula *rotulos, celula *sets){
 							sprintf(temp, "%d,", v1.endereco);
 							strcpy(text[j][i+1], temp);
 						}
+						else
+							v1.endereco = converteEndereco(temp);
 						
 						//se for constante simbólica, subtitui pelo seu valor
 						if(v2.dir != 0){
@@ -689,15 +733,12 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, 
 				//trata diretiva wfill
 				else if(strcmp(tipo, "wfill") == 0){
 					if(atual.dir == -1){
-						//armazena em temp o numero/rotulo do argumento1 sem a virgula
+						//armazena em temp o numero do argumento1 sem a virgula
 						k = strlen(text[j][i+1]);
 						strcpy(temp, text[j][i+1]);
 						temp[k-1] = '\0';
 						
-						//procura nos rotulos ou converte o numero
-						v1 = procuraCelula(rotulos, temp);
-						if(v1.dir == 0)
-							v1.endereco = converteEndereco(temp);
+						v1.endereco = converteEndereco(temp);
 						
 						if(v2.dir == 0){
 							//verifica se argumento2 é negativo e converte o numero
@@ -747,11 +788,11 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, 
 				//trata instrucao
 				else if(strcmp(tipo, "instrucao") == 0){
 					if(atual.dir == 1){
-						fprintf(file,"%02X %03X\n", interpretaInstrucao(text[j][i], text[j][i+1], rotulos), getEndereco(text[j][i+1], rotulos, j));
+						fprintf(file,"%02X %03X\n", interpretaInstrucao(text[j][i], text[j][i+1], rotulos, j), getEndereco(text[j][i+1], rotulos, j));
 						atual.endereco++;
 					}
 					else{
-						fprintf(file,"%03X %02X %03X ",atual.endereco, interpretaInstrucao(text[j][i], text[j][i+1], rotulos), getEndereco(text[j][i+1], rotulos, j));
+						fprintf(file,"%03X %02X %03X ",atual.endereco, interpretaInstrucao(text[j][i], text[j][i+1], rotulos, j), getEndereco(text[j][i+1], rotulos, j));
 					}
 					
 					
@@ -762,11 +803,11 @@ void secondFileRun(char ***text, celula *rotulos, celula *sets, char* filename, 
 				
 				else if(strcmp(tipo, "instrucao_sem_arg") == 0){
 					if(atual.dir == 1){
-						fprintf(file,"%02X %03X\n", interpretaInstrucao(text[j][i], text[j][i+1], rotulos), 0);
+						fprintf(file,"%02X %03X\n", interpretaInstrucao(text[j][i], text[j][i+1], rotulos, j), 0);
 						atual.endereco++;
 					}
 					else{
-						fprintf(file,"%03X %02X %03X ",atual.endereco, interpretaInstrucao(text[j][i], text[j][i+1], rotulos), 0);
+						fprintf(file,"%03X %02X %03X ",atual.endereco, interpretaInstrucao(text[j][i], text[j][i+1], rotulos, j), 0);
 					}
 					
 					atual.dir = atual.dir * (-1);
@@ -828,12 +869,12 @@ void read_ASM_file(char *filename, char *output)
 					file[j] = '\0';
 					j++;
 				}
-				else if(file[j] != ' ' && file[j] != '\n' && file[j] != '\0'){
+				else if(file[j] != ' ' && file[j] != '\t' && file[j] != '\n' && file[j] != '\0'){
 					words[i] = &file[j];
 					i++;
 					
 					//percorre toda palavra
-					while(file[j] != ' ' && file[j] != '\n' && file[j] != '\0')
+					while(file[j] != ' ' && file[j] != '\t' file[j] != '\n' && file[j] != '\0')
 						j++;
 				}
 			}
@@ -855,12 +896,6 @@ void read_ASM_file(char *filename, char *output)
 	celula sets, rotulos;
 	
 	firstFileRun(text, &rotulos, &sets);
-	
-	printf("ROTULOS:\n");
-	imprimeCelula(&rotulos);
-	
-	printf("SETS:\n");
-	imprimeCelula(&sets);
 	
 	//realiza segunda leitura e imprime o arquivo montado
 	

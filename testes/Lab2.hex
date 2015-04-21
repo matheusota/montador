@@ -1,44 +1,58 @@
-000 09 3FE 0B 3FF
-001 0A 000 21 3FD
-002 15 000 21 3FC
-003 09 3FD 0A 000
-004 0C 3FC 0A 000
-005 05 3FC 15 000
-006 21 3FC 09 3FD
-007 0A 000 0C 3FC
-008 0A 000 05 3FC
-009 15 000 21 3FC
-00A 09 3FD 0A 000
-00B 0C 3FC 0A 000
-00C 05 3FC 15 000
-00D 21 3FC 09 3FD
-00E 0A 000 0C 3FC
-00F 0A 000 05 3FC
-010 15 000 21 3FC
-011 09 3FD 0A 000
-012 0C 3FC 0A 000
-013 05 3FC 15 000
-014 21 3FC 09 3FD
-015 0A 000 0C 3FC
-016 0A 000 05 3FC
-017 15 000 21 3FC
-018 09 3FD 0A 000
-019 0C 3FC 0A 000
-01A 05 3FC 15 000
-01B 21 3FC 09 3FD
-01C 0A 000 0C 3FC
-01D 0A 000 05 3FC
-01E 15 000 21 3FC
-01F 09 3FD 0A 000
-020 0C 3FC 0A 000
-021 05 3FC 15 000
-022 21 3FC 09 3FD
-023 0A 000 0C 3FC
-024 0A 000 05 3FC
-025 15 000 21 3FC
+000 09 3FE 0B 3FF #MQ recebe g // multiplica g por x
+001 0A 000 21 3FD #transfere o que está em MQ para AC (AC = g*x) // Transfere o conteúdo em AC para a memória do endereço y
+002 15 000 21 3FC # divide o valor em AC por 2 (AC = y/2)// Transfere o conteúdo em AC para a memória do endereço k
+
+003 09 3FD 0A 000 # MQ recebe y // transfere o que está em MQ para AC (AC = y)
+004 0C 3FC 0A 000 # divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k) // transfere o que está em MQ para AC (AC = y/k)
+005 05 3FC 15 000 # soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k) // divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'
+006 21 3FC 09 3FD # transfere o conteúdo de AC para a memória do endereço k// MQ recebe y
+
+007 0A 000 0C 3FC # transfere o que está em MQ para AC (AC = y) // divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k)
+008 0A 000 05 3FC #transfere o que está em MQ para AC (AC = y/k) // soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k)
+009 15 000 21 3FC #divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'// transfere o conteúdo de AC para a memória do endereço k
+
+00A 09 3FD 0A 000 # MQ recebe y // transfere o que está em MQ para AC (AC = y)
+00B 0C 3FC 0A 000 # divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k) // transfere o que está em MQ para AC (AC = y/k)
+00C 05 3FC 15 000 # soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k) // divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'
+00D 21 3FC 09 3FD # transfere o conteúdo de AC para a memória do endereço k// MQ recebe y
+
+00E 0A 000 0C 3FC # transfere o que está em MQ para AC (AC = y) // divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k)
+00F 0A 000 05 3FC #transfere o que está em MQ para AC (AC = y/k) // soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k)
+010 15 000 21 3FC #divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'// transfere o conteúdo de AC para a memória do endereço k
+
+011 09 3FD 0A 000 # MQ recebe y // transfere o que está em MQ para AC (AC = y)
+012 0C 3FC 0A 000 # divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k) // transfere o que está em MQ para AC (AC = y/k)
+013 05 3FC 15 000 # soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k) // divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'
+014 21 3FC 09 3FD # transfere o conteúdo de AC para a memória do endereço k// MQ recebe y
+
+015 0A 000 0C 3FC # transfere o que está em MQ para AC (AC = y) // divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k)
+016 0A 000 05 3FC #transfere o que está em MQ para AC (AC = y/k) // soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k)
+017 15 000 21 3FC #divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'// transfere o conteúdo de AC para a memória do endereço k
+
+018 09 3FD 0A 000 # MQ recebe y // transfere o que está em MQ para AC (AC = y)
+019 0C 3FC 0A 000 # divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k) // transfere o que está em MQ para AC (AC = y/k)
+01A 05 3FC 15 000 # soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k) // divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'
+01B 21 3FC 09 3FD # transfere o conteúdo de AC para a memória do endereço k// MQ recebe y
+
+01C 0A 000 0C 3FC # transfere o que está em MQ para AC (AC = y) // divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k)
+01D 0A 000 05 3FC #transfere o que está em MQ para AC (AC = y/k) // soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k)
+01E 15 000 21 3FC #divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'// transfere o conteúdo de AC para a memória do endereço k
+
+01F 09 3FD 0A 000 # MQ recebe y // transfere o que está em MQ para AC (AC = y)
+020 0C 3FC 0A 000 # divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k) // transfere o que está em MQ para AC (AC = y/k)
+021 05 3FC 15 000 # soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k) // divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'
+022 21 3FC 09 3FD # transfere o conteúdo de AC para a memória do endereço k// MQ recebe y
+
+023 0A 000 0C 3FC # transfere o que está em MQ para AC (AC = y) // divide o valor em AC por k e guarda o quociente em MQ (MQ= y/k)
+024 0A 000 05 3FC #transfere o que está em MQ para AC (AC = y/k) // soma o que está contido no endereço k com AC e deixa o resultado em AC (AC = k + y/k)
+025 15 000 21 3FC #divide o valor em AC por 2 (AC = (k+ y/k)/2)= k'// transfere o conteúdo de AC para a memória do endereço k
+
 026 01 3FC 0A 000
 027 0D 400 00 000
-3FC 00 000 00 000
-3FD 00 000 00 000
-3FE 00 000 00 00A
-3FF 00 000 00 DAC
+
+
+# MAPA DE MEMORIA
+3FC 00 000 00 000 #k
+3FD 00 000 00 000 #y
+3FE 00 000 00 00A #g
+3FF 00 000 00 DAC #x
